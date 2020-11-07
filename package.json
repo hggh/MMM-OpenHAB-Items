@@ -1,0 +1,15 @@
+{
+  "name": "MMM-OpenHAB-Items",
+  "version": "0.0.1",
+  "description": "MagicMirror module to access OpenHAB Items with REST API",
+  "author": "Jonas Genannt",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hggh/MMM-OpenHAB-Items.git"
+  },
+  "main": "MMM-OpenHAB-Items.js",
+  "dependencies": {
+    "got": "^11.8.0"
+  }
+}
