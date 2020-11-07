@@ -76,6 +76,10 @@ Module.register('MMM-OpenHAB-Items', {
 
       item_value = document.createElement("span")
 
+      if (item.item_type == 'Number') {
+         item_value.innerHTML = item.item_value;
+      }
+
       if (item.item_type == 'Switch') {
         if (item.icon != null && item.icon == 'light') {
           item_value.className = "fa fa-fw fa-lightbulb";

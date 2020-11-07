@@ -46,6 +46,10 @@ module.exports = NodeHelper.create({
         if (response.body.type == 'Rollershutter') {
           item_type = 'Rollershutter';
         }
+        if (response.body.type.startsWith('Number')) {
+          item_type = 'Number';
+          item_value = response.body.state;
+        }
 
         if (item_type != null) {
           this.sendSocketNotification("NEW_ITEM", {
