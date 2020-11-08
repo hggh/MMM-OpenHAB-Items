@@ -5,6 +5,7 @@ Module.register('MMM-OpenHAB-Items', {
 
   defaults: {
     tableClass: 'xsmall',
+    updateInterval: 60 * 5, // update Values every 5min
   },
 
   getStyles: function() {
@@ -20,8 +21,26 @@ Module.register('MMM-OpenHAB-Items', {
     for (var i in this.config.items) {
       var item = this.config.items[i];
       this.addItem(this.config.url, item);
-      
     }
+    setTimeout(() => {
+      this.updateItemValues();
+    }, this.config.updateInterval * 1000);
+  },
+
+
+  updateItemValues: function() {
+    for (var i in this.items) {
+      var item = this.items[i];
+      if (item.item_only_view == true) {
+        this.sendSocketNotification("ITEM_UPDATE_VALUE", {
+          url: this.config.url,
+          item_name: item.item_name,
+        });
+      }
+    }
+    setTimeout(() => {
+      this.updateItemValues();
+    }, this.config.updateInterval * 1000);
   },
 
   socketNotificationReceived: function(notification, payload) {
@@ -32,10 +51,21 @@ Module.register('MMM-OpenHAB-Items', {
         icon: payload.icon,
         item_type: payload.item_type,
         item_value: payload.item_value,
+        item_only_view: payload.item_only_view,
       })
     }
+    if (notification == 'ITEM_VALUE_UPDATED') {
+      item_name = payload.item_name;
+      item_value = payload.item_value;
+      for (var i in this.items) {
+        var item = this.items[i];
+        if (item.item_name == item_name) {
+          this.items[i].item_value = item_value;
+        }
+      }
+    }
 
-    this.updateDom(200);
+    this.updateDom(1000);
   },
 
   addItem: function(url, item) {

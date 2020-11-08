@@ -14,6 +14,22 @@ module.exports = NodeHelper.create({
     if (notification == 'ROLLERSHUTTER') {
       this.rollershutter(payload.url, payload.item_name, payload.action);
     }
+    if (notification == 'ITEM_UPDATE_VALUE') {
+      this.updateItemValue(payload.url, payload.item_name);
+    }
+  },
+
+  updateItemValue: function(url, item_name) {
+    const r = got.get(url + item_name, {responseType: 'json'})
+      .then((response) => {
+        if (response.body.type.startsWith('Number')) {
+          item_value = response.body.state;
+        }
+        this.sendSocketNotification("ITEM_VALUE_UPDATED", {
+          item_name: item_name,
+          item_value: item_value,
+        });
+      });
   },
 
   rollershutter: function(url, item_name, action) {
@@ -39,6 +55,7 @@ module.exports = NodeHelper.create({
        
         item_type = null;
         item_value = null;
+        item_only_view = false;
 
         if (response.body.type == 'Switch') {
           item_type = 'Switch';
@@ -49,6 +66,7 @@ module.exports = NodeHelper.create({
         if (response.body.type.startsWith('Number')) {
           item_type = 'Number';
           item_value = response.body.state;
+          item_only_view = true;
         }
 
         if (item_type != null) {
@@ -58,6 +76,7 @@ module.exports = NodeHelper.create({
             item_type: item_type,
             icon: icon,
             item_value: item_value,
+            item_only_view: item_only_view,
           });
         }
         else {
