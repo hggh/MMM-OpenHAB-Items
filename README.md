@@ -1,6 +1,6 @@
 # Magic Mirror Module: OpenHAB Items
 
-This a module for [Magic Mirror²](https://github.com/MichMich/MagicMirror) list OpenHAB Items on your Magic Mirror. It is designed for touch screens. But can also display values of Items from your OpenHAB. It uses the OpenHAB REST API.
+This is a module for [Magic Mirror²](https://github.com/MichMich/MagicMirror) to list OpenHAB Items on your Magic Mirror. It is designed for touch screens. But can also display values of Items from your OpenHAB. It uses the OpenHAB REST API.
 
 Supported Items:
  * Rollershutter
