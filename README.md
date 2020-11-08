@@ -5,6 +5,7 @@ This a module for [Magic Mirror²](https://github.com/MichMich/MagicMirror) list
 Supported Items:
  * Rollershutter
  * Switch (does not show the current state of your switch. it will only toggle the switch)
+ * Number
 
 ![example1.png](https://raw.githubusercontent.com/hggh/MMM-OpenHAB-Items/main/img/example1.png)
 
