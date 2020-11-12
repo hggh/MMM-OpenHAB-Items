@@ -4,7 +4,7 @@ Module.register('MMM-OpenHAB-Items', {
   config: null,
 
   defaults: {
-    tableClass: 'xsmall',
+    tableClass: 'small',
     updateInterval: 60 * 5, // update Values every 5min
   },
 
@@ -135,7 +135,7 @@ Module.register('MMM-OpenHAB-Items', {
 
         shutter_halt = document.createElement("span")
         shutter_halt.setAttribute("data-item-name", item.item_name);
-        shutter_halt.className = "fa fa-fw fa-window-close";
+        shutter_halt.className = "fa fa-fw fa-window-close padding-left";
         shutter_halt.addEventListener("click", function() {
           self.sendSocketNotification("ROLLERSHUTTER", {item_name: this.dataset.itemName, url: self.config.url, action: 'STOPP'})
         });
@@ -143,7 +143,7 @@ Module.register('MMM-OpenHAB-Items', {
 
         shutter_down = document.createElement("span")
         shutter_down.setAttribute("data-item-name", item.item_name);
-        shutter_down.className = "fa fa-fw fa-sort-down";
+        shutter_down.className = "fa fa-fw fa-sort-down padding-left";
         shutter_down.addEventListener("click", function() {
           self.sendSocketNotification("ROLLERSHUTTER", {item_name: this.dataset.itemName, url: self.config.url, action: 'DOWN'})
         });
