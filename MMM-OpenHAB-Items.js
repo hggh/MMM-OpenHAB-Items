@@ -137,7 +137,7 @@ Module.register('MMM-OpenHAB-Items', {
         shutter_halt.setAttribute("data-item-name", item.item_name);
         shutter_halt.className = "fa fa-fw fa-window-close padding-left";
         shutter_halt.addEventListener("click", function() {
-          self.sendSocketNotification("ROLLERSHUTTER", {item_name: this.dataset.itemName, url: self.config.url, action: 'STOPP'})
+          self.sendSocketNotification("ROLLERSHUTTER", {item_name: this.dataset.itemName, url: self.config.url, action: 'STOP'})
         });
 
 
