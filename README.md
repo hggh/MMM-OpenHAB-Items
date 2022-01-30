@@ -28,6 +28,7 @@ example configuration:
 {
 		module: 'MMM-OpenHAB-Items',
 		position: "top_right",
+		header: "OpenHAB", // optional
 		config: {
 			url: "https://username:password@openhab.example/rest/items/",
 			items: [
