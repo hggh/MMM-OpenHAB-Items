@@ -76,10 +76,6 @@ Module.register('MMM-OpenHAB-Items', {
     });
   },
 
-  getHeader: function() {
-    return "OpenHAB";
-  },
-
   getDom: function() {
     var table = document.createElement("table");
     table.className = this.config.tableClass;
