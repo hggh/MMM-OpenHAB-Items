@@ -22,8 +22,10 @@ module.exports = NodeHelper.create({
   updateItemValue: function(url, item_name) {
     const r = got.get(url + item_name, {responseType: 'json'})
       .then((response) => {
-        if (response.body.type.startsWith('Number')) {
-          item_value = response.body.state;
+        if (response.body.type.startsWith('Number') || (response.body.type.startsWith('Group') && response.body.groupType.startsWith('Number'))) {
+          state = response.body.state;
+          pattern = response.body.stateDescription.pattern;
+          item_value = this.convertState(state, pattern);
         }
         this.sendSocketNotification("ITEM_VALUE_UPDATED", {
           item_name: item_name,
@@ -48,6 +50,41 @@ module.exports = NodeHelper.create({
 
   },
 
+  convertState: function(state, pattern) {
+    if(pattern != "") {
+      var spaceIdx = pattern.indexOf(" ");
+
+      if(spaceIdx != -1) {
+        var stateWithSpace = state.indexOf(" ");
+        if(stateWithSpace !=-1) {
+          //this is an openHAB item with units of measurement support => remove unit from number for formating
+          state = state.substring(0,stateWithSpace);
+        }
+        var number = Number(state);
+
+        var format = pattern.split(" ")[0];
+        var dotIndex = format.indexOf(".");
+        var fIndex = format.indexOf("f");
+        var dIndex = format.indexOf("%d");
+
+        if(dotIndex != -1 && fIndex != -1) {
+          var digits = format.substring(dotIndex+1, fIndex);
+          number = number.toFixed(digits);
+        } else if (dIndex != -1) {
+          number = number.toFixed(0);
+        }
+
+        unit = pattern.split(" ")[1];
+        if("%%" == unit) {
+          unit = "%";
+        }
+        return number + " " + unit;
+      }
+    } else {
+      return state;
+    }
+  },
+
   getItem: function(url, item_name, icon) {
     const r = got.get(url + item_name, {responseType: 'json'})
       .then((response) => {
@@ -63,9 +100,11 @@ module.exports = NodeHelper.create({
         if (response.body.type == 'Rollershutter') {
           item_type = 'Rollershutter';
         }
-        if (response.body.type.startsWith('Number')) {
+        if (response.body.type.startsWith('Number') || (response.body.type.startsWith('Group') && response.body.groupType.startsWith('Number'))) {
           item_type = 'Number';
-          item_value = response.body.state;
+          state = response.body.state;
+          pattern = response.body.stateDescription.pattern;
+          item_value = this.convertState(state, pattern);
           item_only_view = true;
         }
 
