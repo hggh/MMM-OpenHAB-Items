@@ -61,8 +61,14 @@ module.exports = NodeHelper.create({
           state = state.substring(0,stateWithSpace);
         }
         var number = Number(state);
-
         var format = pattern.split(" ")[0];
+        var unit = pattern.split(" ")[1];
+
+        if("%%" == unit) {
+          unit = "%";
+          number = number * 100;
+        }
+
         var dotIndex = format.indexOf(".");
         var fIndex = format.indexOf("f");
         var dIndex = format.indexOf("%d");
@@ -74,10 +80,6 @@ module.exports = NodeHelper.create({
           number = number.toFixed(0);
         }
 
-        unit = pattern.split(" ")[1];
-        if("%%" == unit) {
-          unit = "%";
-        }
         return number + " " + unit;
       }
     } else {
