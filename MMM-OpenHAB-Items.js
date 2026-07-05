@@ -18,9 +18,10 @@ Module.register('MMM-OpenHAB-Items', {
       Log.error("MMM-OpenHAB-Items.js: url parameter in config not found.");
       return;
     }
+    this.items = new Array(this.config.items.length);
     for (var i in this.config.items) {
       var item = this.config.items[i];
-      this.addItem(this.config.url, item);
+      this.addItem(this.config.url, item, i);
     }
     setTimeout(() => {
       this.updateItemValues();
@@ -45,14 +46,14 @@ Module.register('MMM-OpenHAB-Items', {
 
   socketNotificationReceived: function(notification, payload) {
     if (notification === 'NEW_ITEM') {
-      this.items.push({
+      this.items[payload.order] = {
         item_label: payload.item_label,
         item_name: payload.item_name,
         icon: payload.icon,
         item_type: payload.item_type,
         item_value: payload.item_value,
         item_only_view: payload.item_only_view,
-      })
+      }
     }
     if (notification == 'ITEM_VALUE_UPDATED') {
       item_name = payload.item_name;
@@ -68,11 +69,12 @@ Module.register('MMM-OpenHAB-Items', {
     this.updateDom(1000);
   },
 
-  addItem: function(url, item) {
+  addItem: function(url, item, order) {
     this.sendSocketNotification("ADD_ITEM", {
       url: url,
       item_name: item.item_name,
       icon: item.icon,
+      order: order,
     });
   },
 

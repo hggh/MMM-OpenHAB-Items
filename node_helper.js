@@ -6,7 +6,7 @@ var NodeHelper = require("node_helper");
 module.exports = NodeHelper.create({
   socketNotificationReceived: function (notification, payload) {
     if (notification == 'ADD_ITEM') {
-      this.getItem(payload.url, payload.item_name, payload.icon);
+      this.getItem(payload.url, payload.item_name, payload.icon, payload.order);
     }
     if (notification == 'TOGGLE_SWITCH') {
       this.toggleSwitch(payload.url, payload.item_name);
@@ -85,11 +85,11 @@ module.exports = NodeHelper.create({
     }
   },
 
-  getItem: function(url, item_name, icon) {
+  getItem: function(url, item_name, icon, order) {
     const r = got.get(url + item_name, {responseType: 'json'})
       .then((response) => {
         item_label = response.body.label;
-       
+        
         item_type = null;
         item_value = null;
         item_only_view = false;
@@ -116,6 +116,7 @@ module.exports = NodeHelper.create({
             icon: icon,
             item_value: item_value,
             item_only_view: item_only_view,
+            order: order,
           });
         }
         else {
