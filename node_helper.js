@@ -6,7 +6,7 @@ var NodeHelper = require("node_helper");
 module.exports = NodeHelper.create({
   socketNotificationReceived: function (notification, payload) {
     if (notification == 'ADD_ITEM') {
-      this.getItem(payload.url, payload.item_name, payload.icon);
+      this.getItem(payload.url, payload.item_name, payload.icon, payload.identifier);
     }
     if (notification == 'TOGGLE_SWITCH') {
       this.toggleSwitch(payload.url, payload.item_name);
@@ -15,11 +15,11 @@ module.exports = NodeHelper.create({
       this.rollershutter(payload.url, payload.item_name, payload.action);
     }
     if (notification == 'ITEM_UPDATE_VALUE') {
-      this.updateItemValue(payload.url, payload.item_name);
+      this.updateItemValue(payload.url, payload.item_name, payload.identifier);
     }
   },
 
-  updateItemValue: function(url, item_name) {
+  updateItemValue: function(url, item_name, identifier) {
     const r = got.get(url + item_name, {responseType: 'json'})
       .then((response) => {
         if (response.body.type.startsWith('Number') || (response.body.type.startsWith('Group') && response.body.groupType.startsWith('Number'))) {
@@ -30,6 +30,7 @@ module.exports = NodeHelper.create({
         this.sendSocketNotification("ITEM_VALUE_UPDATED", {
           item_name: item_name,
           item_value: item_value,
+          identifier: identifier,
         });
       });
   },
@@ -85,11 +86,11 @@ module.exports = NodeHelper.create({
     }
   },
 
-  getItem: function(url, item_name, icon) {
+  getItem: function(url, item_name, icon, identifier) {
     const r = got.get(url + item_name, {responseType: 'json'})
       .then((response) => {
         item_label = response.body.label;
-       
+        
         item_type = null;
         item_value = null;
         item_only_view = false;
@@ -116,6 +117,7 @@ module.exports = NodeHelper.create({
             icon: icon,
             item_value: item_value,
             item_only_view: item_only_view,
+            identifier: identifier,
           });
         }
         else {
