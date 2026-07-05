@@ -73,6 +73,7 @@ Module.register('MMM-OpenHAB-Items', {
       url: url,
       item_name: item.item_name,
       icon: item.icon,
+      label: item.label,
     });
   },
 

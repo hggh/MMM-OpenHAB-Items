@@ -35,7 +35,7 @@ example configuration:
 				{
 					item_name: "TableLight",
 					icon: "light",
-					
+					label: "Table Light", // optional, overrides the OpenHAB label
 				},
 				{
 					item_name: "Rolladen_Balkon",
