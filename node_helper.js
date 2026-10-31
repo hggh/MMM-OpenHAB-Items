@@ -6,7 +6,7 @@ var NodeHelper = require("node_helper");
 module.exports = NodeHelper.create({
   socketNotificationReceived: function (notification, payload) {
     if (notification == 'ADD_ITEM') {
-      this.getItem(payload.url, payload.item_name, payload.icon);
+      this.getItem(payload.url, payload.item_name, payload.icon, payload.label);
     }
     if (notification == 'TOGGLE_SWITCH') {
       this.toggleSwitch(payload.url, payload.item_name);
@@ -22,6 +22,10 @@ module.exports = NodeHelper.create({
   updateItemValue: function(url, item_name) {
     const r = got.get(url + item_name, {responseType: 'json'})
       .then((response) => {
+        var item_value = null;
+        if (response.body.type == 'Contact') {
+          item_value = response.body.state;
+        }
         if (response.body.type.startsWith('Number') || (response.body.type.startsWith('Group') && response.body.groupType.startsWith('Number'))) {
           state = response.body.state;
           pattern = response.body.stateDescription.pattern;
@@ -85,10 +89,10 @@ module.exports = NodeHelper.create({
     }
   },
 
-  getItem: function(url, item_name, icon) {
+  getItem: function(url, item_name, icon, label) {
     const r = got.get(url + item_name, {responseType: 'json'})
       .then((response) => {
-        item_label = response.body.label;
+        item_label = label || response.body.label;
        
         item_type = null;
         item_value = null;
@@ -99,6 +103,11 @@ module.exports = NodeHelper.create({
         }
         if (response.body.type == 'Rollershutter') {
           item_type = 'Rollershutter';
+        }
+        if (response.body.type == 'Contact') {
+          item_type = 'Contact';
+          item_value = response.body.state;
+          item_only_view = true;
         }
         if (response.body.type.startsWith('Number') || (response.body.type.startsWith('Group') && response.body.groupType.startsWith('Number'))) {
           item_type = 'Number';

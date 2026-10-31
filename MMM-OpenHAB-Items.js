@@ -73,6 +73,7 @@ Module.register('MMM-OpenHAB-Items', {
       url: url,
       item_name: item.item_name,
       icon: item.icon,
+      label: item.label,
     });
   },
 
@@ -104,6 +105,15 @@ Module.register('MMM-OpenHAB-Items', {
 
       if (item.item_type == 'Number') {
          item_value.innerHTML = item.item_value;
+      }
+
+      if (item.item_type == 'Contact') {
+        if (item.item_value == 'OPEN') {
+          item_value.className = "fa fa-fw fa-door-open contact-open";
+        }
+        else {
+          item_value.className = "fa fa-fw fa-door-closed contact-closed";
+        }
       }
 
       if (item.item_type == 'Switch') {
