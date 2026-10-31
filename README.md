@@ -6,6 +6,7 @@ Supported Items:
  * Rollershutter
  * Switch (does not show the current state of your switch. it will only toggle the switch)
  * Number (and Group:Number)
+ * Contact (red open door when `OPEN`, otherwise green closed door; updated by polling)
 
 ![example1.png](https://raw.githubusercontent.com/hggh/MMM-OpenHAB-Items/main/img/example1.png)
 
@@ -35,7 +36,7 @@ example configuration:
 				{
 					item_name: "TableLight",
 					icon: "light",
-					
+					label: "Tischlampe", // optional, overrides the label from OpenHAB
 				},
 				{
 					item_name: "Rolladen_Balkon",
